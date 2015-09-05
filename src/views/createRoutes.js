@@ -4,6 +4,7 @@ import App from 'views/App';
 import Home from 'views/Home';
 import Widgets from 'views/Widgets';
 import About from 'views/About';
+import Products from 'views/Products';
 import Login from 'views/Login';
 import RequireLogin from 'views/RequireLogin';
 import LoginSuccess from 'views/LoginSuccess';
@@ -16,6 +17,7 @@ export default function(store) {
       <Route path="/" component={Home}/>
       <Route path="/widgets" component={Widgets}/>
       <Route path="/about" component={About}/>
+      <Route path="/products" component={Products}/>
       <Route path="/login" component={Login}/>
       <Route component={RequireLogin} onEnter={RequireLogin.onEnter(store)}>
         <Route path="/loginSuccess" component={LoginSuccess}/>

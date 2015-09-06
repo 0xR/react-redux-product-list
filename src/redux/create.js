@@ -1,5 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import createMiddleware from './clientMiddleware';
+import promiseMiddleware from 'redux-promise-middleware';
+
 
 export default function createApiClientStore(client, data) {
   const middleware = createMiddleware(client);
@@ -7,7 +9,7 @@ export default function createApiClientStore(client, data) {
   if (__DEVELOPMENT__ && __CLIENT__ && __DEVTOOLS__) {
     const { devTools, persistState } = require('redux-devtools');
     finalCreateStore = compose(
-      applyMiddleware(middleware),
+      applyMiddleware(middleware, promiseMiddleware),
       devTools(),
       persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
     )(createStore);

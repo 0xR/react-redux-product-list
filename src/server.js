@@ -5,6 +5,7 @@ import config from './config';
 import favicon from 'serve-favicon';
 import compression from 'compression';
 import httpProxy from 'http-proxy';
+import expressProxy from 'express-http-proxy';
 import path from 'path';
 import createStore from './redux/create';
 import api from './api/api';
@@ -24,6 +25,12 @@ app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));
 
 app.use(require('serve-static')(path.join(__dirname, '..', 'static')));
 
+app.get('/api/products', expressProxy('https://www.wehkamp.com', {
+  forwardPath: function(req) {
+    return '/nlbe' + req.originalUrl;
+  }
+}));
+
 // Proxy to API server
 app.use('/api', (req, res) => {
   proxy.web(req, res);
@@ -37,7 +44,7 @@ proxy.on('error', (error, req, res) => {
     res.writeHead(500, {'content-type': 'application/json'});
   }
 
-  json = { error: 'proxy_error', reason: error.message };
+  json = {error: 'proxy_error', reason: error.message};
   res.end(JSON.stringify(json));
 });
 

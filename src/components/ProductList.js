@@ -15,7 +15,7 @@ class ProductList extends Component {
     const {products} = this.props; // eslint-disable-line no-shadow
     return (
       <ul>
-        {products.map(product => <li key={product}>{product}</li>)}
+        {products.map(product => <li key={product.product_number}>{product.website_description}</li>)}
       </ul>
     );
   }

@@ -9,7 +9,10 @@ import {isLoaded as productsLoaded, load as loadProducts} from '../ducks/product
 export default
 class Products extends Component {
   static propTypes = {
-    products: PropTypes.arrayOf(PropTypes.object).isRequired
+    products: PropTypes.arrayOf(PropTypes.object),
+    loaded: PropTypes.bool.isRequired,
+    loading: PropTypes.bool,
+    error: PropTypes.string
   }
 
   render() {

@@ -35,9 +35,9 @@ class Products extends Component {
     );
   }
 
-  static fetchData(store) {
-    if (!productsLoaded(store.getState())) {
-      return store.dispatch(loadProducts());
+  static fetchData(store, params, query) {
+    if (!productsLoaded(store.getState()) && query.q) {
+      return store.dispatch(loadProducts(query.q, query.page));
     }
   }
 }

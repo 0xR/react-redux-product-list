@@ -41,10 +41,10 @@ export function isLoaded({products}) {
   return products && products.loaded;
 }
 
-export function load() {
+export function load(query, page) {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => getProducts(client, 'broek'),
+    promise: (client) => getProducts(client, query, page),
     query: 'broek'
   };
 }

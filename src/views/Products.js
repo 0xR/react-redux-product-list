@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import DocumentMeta from 'react-document-meta';
 import ProductList from '../components/ProductList.js';
+import SearchBox from '../components/SearchBox.js';
 import {isLoaded as productsLoaded, load as loadProducts} from '../ducks/products';
 
 @connect(
@@ -16,7 +17,7 @@ class Products extends Component {
   }
 
   render() {
-    const {products, loaded, loading, error} = this.props;
+    const {products, loaded, loading, error, location:{query}} = this.props;
 
     let content;
     if (loaded) {
@@ -31,15 +32,22 @@ class Products extends Component {
 
     return (
       <div className="container">
-        <h1>Products Search</h1>
         <DocumentMeta title="React Redux Example: Product Search"/>
-        {content}
+
+        <h1>Products Search</h1>
+
+        <div className="row">
+          <SearchBox query={query}/>
+        </div>
+        <div className="row">
+          {content}
+        </div>
       </div>
     );
   }
 
   static fetchData(store, params, query) {
-    if (!productsLoaded(store.getState()) && query.q) {
+    if (!productsLoaded(store.getState(), query.q, query.page)) {
       return store.dispatch(loadProducts(query.q, query.page));
     }
   }

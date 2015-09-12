@@ -16,12 +16,15 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOAD_SUCCESS:
+      const {query, page} = action;
       return {
         ...state,
         loading: false,
         loaded: true,
         products: action.result.products,
-        error: null
+        error: null,
+        query,
+        page
       };
     case LOAD_FAIL:
       console.log('error', action);
@@ -37,15 +40,16 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-export function isLoaded({products}) {
-  return products && products.loaded;
+export function isLoaded({products}, query, page) {
+  return products && products.loaded && products.query === query && products.page === page;
 }
 
 export function load(query, page) {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     promise: (client) => getProducts(client, query, page),
-    query: 'broek'
+    query,
+    page
   };
 }
 

@@ -5,7 +5,7 @@ const LOAD_FAIL = 'redux-example/products/LOAD_FAIL';
 import getProducts from 'services/ProductService';
 
 const initialState = {
-  loading: true
+  loaded: false
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -19,6 +19,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: false,
+        loaded: true,
         products: action.result.products,
         error: null
       };
@@ -27,6 +28,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: false,
+        loaded: false,
         products: [],
         error: 'Error loading products'
       };
@@ -36,7 +38,7 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 export function isLoaded({products}) {
-  return products && !products.loading && !products.error;
+  return products && products.loaded;
 }
 
 export function load() {

@@ -13,9 +13,19 @@ class Products extends Component {
   }
 
   render() {
-    const {products, loading, error} = this.props;
+    const {products, loaded, loading, error} = this.props;
 
-    const content = loading ? <p>Loading...</p> : (error ? <p>{error}</p> : <ProductList products={products}/>);
+    let content;
+    if (loaded) {
+      content = <ProductList products={products}/>;
+    } else if (loading) {
+      content = <p>Loading...</p>
+    } else if (error) {
+      content = <p>{error}</p>
+    } else {
+      content = <p>Search for a product</p>
+    }
+
     return (
       <div className="container">
         <h1>Products Search</h1>

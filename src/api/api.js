@@ -3,6 +3,7 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import config from '../config';
 import * as actions from './routes/index';
+import productsMiddleware from './productsMiddleware';
 import PrettyError from 'pretty-error';
 
 const pretty = new PrettyError();
@@ -14,6 +15,8 @@ app.use(session({
   cookie: { maxAge: 60000 }
 }));
 app.use(bodyParser.json());
+
+app.use('/products', productsMiddleware);
 
 export default function api() {
   return new Promise((resolve) => {

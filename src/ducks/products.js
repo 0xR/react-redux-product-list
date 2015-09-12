@@ -19,10 +19,11 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: false,
-        products: action.payload.products,
+        products: action.result.products,
         error: null
       };
     case LOAD_FAIL:
+      console.log('error', action);
       return {
         ...state,
         loading: false,
@@ -34,17 +35,15 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-export function isLoaded(globalState) {
-  return globalState.widgets && globalState.widgets.loaded;
+export function isLoaded({products}) {
+  return products && !products.loading && !products.error;
 }
 
 export function load() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    payload: {
-      promise: getProducts('broek'),
-      query: 'broek'
-    }
+    promise: (client) => getProducts(client, 'broek'),
+    query: 'broek'
   };
 }
 

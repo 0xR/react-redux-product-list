@@ -6,19 +6,25 @@ const steps = 10;
 const productPerPage = 48;
 
 class PaginationLinks extends Component {
+  getNewQueryParams(page) {
+    const {router, query} = this.props;
+    const {state:{location:{query: queryParams}}} = router;
+    return {...queryParams, q: query, page};
+  }
+
   handleClick(e, targetPage) {
     e.preventDefault();
-    const {router, query, page} = this.props;
+    const {router, page} = this.props;
     const {state:{location:{pathname}}} = router;
     if (page !== targetPage) {
-      router.transitionTo(pathname, {q: query, page: targetPage});
+      router.transitionTo(pathname, this.getNewQueryParams(targetPage));
     }
   }
 
   hrefForPage(page) {
-    const {router, query} = this.props;
+    const {router} = this.props;
     const {state:{location:{pathname}}} = router;
-    return router.makeHref(pathname, {q: query, page});
+    return router.makeHref(pathname, this.getNewQueryParams(page));
   }
 
   static getPages(page, total) {

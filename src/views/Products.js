@@ -3,25 +3,33 @@ import {connect} from 'react-redux';
 import DocumentMeta from 'react-document-meta';
 import ProductList from '../components/ProductList.js';
 import SearchBox from '../components/SearchBox.js';
+import Pagination from '../components/Pagination.js';
 import {isLoaded as productsLoaded, load as loadProducts} from '../ducks/products';
 
 @connect(
     state => (state.products))
-export default
-class Products extends Component {
+export default class Products extends Component {
   static propTypes = {
     products: PropTypes.arrayOf(PropTypes.object),
     loaded: PropTypes.bool.isRequired,
     loading: PropTypes.bool,
-    error: PropTypes.string
+    error: PropTypes.string,
+    query: PropTypes.string,
+    page: PropTypes.number
   }
 
   render() {
-    const {products, loaded, loading, error, location:{query}} = this.props;
+    const {products, loaded, loading, error, total, query, page} = this.props;
 
     let content;
     if (loaded) {
-      content = <ProductList products={products}/>;
+      content =
+        <div>
+          <div className="row">
+            <Pagination {...{query, total, page}}/>
+          </div>
+          <ProductList products={products}/>
+        </div>;
     } else if (loading) {
       content = <p>Loading...</p>
     } else if (error) {
@@ -39,6 +47,7 @@ class Products extends Component {
         <div className="row">
           <SearchBox query={query}/>
         </div>
+
         <div className="row">
           {content}
         </div>
@@ -48,7 +57,7 @@ class Products extends Component {
 
   static fetchData(store, params, query) {
     if (!productsLoaded(store.getState(), query.q, query.page)) {
-      return store.dispatch(loadProducts(query.q, query.page));
+      return store.dispatch(loadProducts(query.q, parseInt(query.page, 10)));
     }
   }
 }

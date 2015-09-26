@@ -1,4 +1,8 @@
 {
   "stage": 0,
-  "loose": "all"
+  "optional": "runtime",
+  "loose": "all",
+  "plugins": [
+    "typecheck"
+  ]
 }

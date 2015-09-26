@@ -1,5 +1,5 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import createMiddleware from './clientMiddleware';
+import { createStore, applyMiddleware, compose } from 'redux';
+import createMiddleware from './middleware/clientMiddleware';
 import promiseMiddleware from 'redux-promise-middleware';
 
 
@@ -17,13 +17,13 @@ export default function createApiClientStore(client, data) {
     finalCreateStore = applyMiddleware(middleware)(createStore);
   }
 
-  const reducer = require('../ducks/reducer');
+  const reducer = require('./modules/reducer');
   const store = finalCreateStore(reducer, data);
   store.client = client;
 
   if (__DEVELOPMENT__ && module.hot) {
-    module.hot.accept('../ducks/reducer', () => {
-      store.replaceReducer(require('../ducks/reducer'));
+    module.hot.accept('./modules/reducer', () => {
+      store.replaceReducer(require('./modules/reducer'));
     });
   }
 

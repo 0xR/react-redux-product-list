@@ -1,6 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import {bindActionCreators} from 'redux';
-import {increment} from '../ducks/counter';
 import ProductTile from './ProductTile';
 
 export default

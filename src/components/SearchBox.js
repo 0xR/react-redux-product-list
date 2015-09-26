@@ -1,17 +1,16 @@
 import React, {Component, PropTypes} from 'react';
-import exposeRouter from './exposeRouter';
+import {findDOMNode} from 'react-dom';
 
 class SearchBox extends Component {
   static propTypes = {
-    query: PropTypes.string,
-    router: React.PropTypes.object.isRequired
+    query: PropTypes.string
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    const {router, query} = this.props;
-    const {state:{location:{pathname}}} = router;
-    var inputValue = React.findDOMNode(this.refs.searchBoxInput).value;
+    const {query} = this.props;
+    const { state: { location: {pathname}}} = router;
+    const inputValue = findDOMNode(this.refs.searchBoxInput).value;
     if (!query || query !== inputValue) {
       const newQuery = {
         q: inputValue,
@@ -26,21 +25,21 @@ class SearchBox extends Component {
     const defaultValue = query && query.q;
 
     return (
-      <form name='searchForm' onSubmit={(e) => {this.handleSubmit(e)}}>
-        <div className='col-md-2'>
+      <form name="searchForm" onSubmit={(e) => {this.handleSubmit(e);}}>
+        <div className="col-md-2">
           <input
-            className='form-control'
-            type='text'
-            name='q'
-            ref='searchBoxInput'
+            className="form-control"
+            type="text"
+            name="q"
+            ref="searchBoxInput"
             placeholder={'Search'}
             defaultValue={defaultValue}
             />
-          <input type='hidden' name='page' value='1'/>
+          <input type="hidden" name="page" value="1"/>
         </div>
       </form>
     );
   }
 }
 
-export default exposeRouter(SearchBox)
+export default SearchBox;

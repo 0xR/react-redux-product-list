@@ -1,10 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import DocumentMeta from 'react-document-meta';
-import ProductList from '../components/ProductList.js';
-import SearchBox from '../components/SearchBox.js';
-import Pagination from '../components/Pagination.js';
-import {isLoaded as productsLoaded, load as loadProducts} from '../ducks/products';
+import ProductList from '../../components/ProductList.js';
+import SearchBox from '../../components/SearchBox.js';
+import Pagination from '../../components/Pagination.js';
+import {isLoaded as productsLoaded, load as loadProducts} from '../../redux/modules/products.js';
 
 @connect(
     state => (state.products))
@@ -15,7 +15,14 @@ export default class Products extends Component {
     loading: PropTypes.bool,
     error: PropTypes.string,
     query: PropTypes.string,
-    page: PropTypes.number
+    page: PropTypes.number,
+    total: PropTypes.number
+  }
+
+  static fetchData(store, params, query) {
+    if (!productsLoaded(store.getState(), query.q, query.page)) {
+      return store.dispatch(loadProducts(query.q, parseInt(query.page, 10)));
+    }
   }
 
   render() {
@@ -24,18 +31,18 @@ export default class Products extends Component {
     let content;
     if (loaded) {
       content =
-        <div>
+        (<div>
           <div className="row">
             <Pagination {...{query, total, page}}/>
           </div>
           <ProductList products={products}/>
-        </div>;
+        </div>);
     } else if (loading) {
-      content = <p>Loading...</p>
+      content = <p>Loading...</p>;
     } else if (error) {
-      content = <p>{error}</p>
+      content = <p>{error}</p>;
     } else {
-      content = <p>Search for a product</p>
+      content = <p>Search for a product</p>;
     }
 
     return (
@@ -53,11 +60,5 @@ export default class Products extends Component {
         </div>
       </div>
     );
-  }
-
-  static fetchData(store, params, query) {
-    if (!productsLoaded(store.getState(), query.q, query.page)) {
-      return store.dispatch(loadProducts(query.q, parseInt(query.page, 10)));
-    }
   }
 }

@@ -6,30 +6,9 @@ const steps = 10;
 const productPerPage = 48;
 
 class PaginationLinks extends Component {
-  getNewQueryParams(page) {
-    const {router, query} = this.props;
-    const {state:{location:{query: queryParams}}} = router;
-    return {...queryParams, q: query, page};
-  }
-
-  handleClick(e, targetPage) {
-    e.preventDefault();
-    const {router, page} = this.props;
-    const {state:{location:{pathname}}} = router;
-    if (page !== targetPage) {
-      router.transitionTo(pathname, this.getNewQueryParams(targetPage));
-    }
-  }
-
-  hrefForPage(page) {
-    const {router} = this.props;
-    const {state:{location:{pathname}}} = router;
-    return router.makeHref(pathname, this.getNewQueryParams(page));
-  }
-
   static getPages(page, total) {
     const pages = [];
-    for(var i = 1; i <= total; i++) {
+    for (let i = 1; i <= total; i++) {
       if (
         i === 1 ||
         i % steps === 0 ||
@@ -39,6 +18,27 @@ class PaginationLinks extends Component {
       }
     }
     return pages;
+  }
+
+  getNewQueryParams(page) {
+    const { router, query} = this.props;
+    const { state: { location: { query: queryParams}}} = router;
+    return {...queryParams, q: query, page};
+  }
+
+  hrefForPage(page) {
+    const {router} = this.props;
+    const { state: { location: { pathname}}} = router;
+    return router.makeHref(pathname, this.getNewQueryParams(page));
+  }
+
+  handleClick(e, targetPage) {
+    e.preventDefault();
+    const {router, page} = this.props;
+    const {state: {location: {pathname}}} = router;
+    if (page !== targetPage) {
+      router.transitionTo(pathname, this.getNewQueryParams(targetPage));
+    }
   }
 
   render() {

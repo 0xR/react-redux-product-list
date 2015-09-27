@@ -6,12 +6,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createHistory from 'history/lib/createBrowserHistory';
 import createLocation from 'history/lib/createLocation';
+import useQueries from 'history/lib/useQueries';
 import createStore from './redux/create';
 import ApiClient from './helpers/ApiClient';
 import universalRouter from './helpers/universalRouter';
 import io from 'socket.io-client';
 
-const history = createHistory();
+const history = useQueries(createHistory)();
 const client = new ApiClient();
 
 const dest = document.getElementById('content');

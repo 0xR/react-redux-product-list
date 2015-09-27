@@ -1,27 +1,29 @@
 import React, {Component, PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
+import exposeRouter from './exposeRouter';
 
 class SearchBox extends Component {
   static propTypes = {
-    query: PropTypes.string
+    history: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    const {query} = this.props;
-    const { state: { location: {pathname}}} = router;
+    const {history, location: { query, pathname }} = this.props;
     const inputValue = findDOMNode(this.refs.searchBoxInput).value;
-    if (!query || query !== inputValue) {
+    if (!query || query.q !== inputValue) {
       const newQuery = {
+        ...query,
         q: inputValue,
         page: 1
       };
-      router.transitionTo(pathname, newQuery);
+      history.pushState(null, pathname, newQuery);
     }
   }
 
   render() {
-    const {query} = this.props;
+    const {location: { query }} = this.props;
     const defaultValue = query && query.q;
 
     return (
@@ -42,4 +44,4 @@ class SearchBox extends Component {
   }
 }
 
-export default SearchBox;
+export default exposeRouter(SearchBox);

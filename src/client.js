@@ -5,7 +5,6 @@ import 'babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createHistory from 'history/lib/createBrowserHistory';
-import createLocation from 'history/lib/createLocation';
 import useQueries from 'history/lib/useQueries';
 import createStore from './redux/create';
 import ApiClient from './helpers/ApiClient';
@@ -33,8 +32,6 @@ function initSocket() {
 
 window.socket = initSocket();
 
-const location = createLocation(document.location.pathname, document.location.search);
-
 const render = (loc, hist, str, preload) => {
   return universalRouter(loc, hist, str, preload)
     .then(({component}) => {
@@ -58,7 +55,17 @@ history.listenBefore((loc, callback) => {
     .then((callback));
 });
 
-render(location, history, store);
+const renderOnce = () => {
+  let once = false;
+  return location => {
+    if (!once) {
+      once = true;
+      render(location, history, store);
+    }
+  };
+};
+
+history.listen(renderOnce());
 
 if (process.env.NODE_ENV !== 'production') {
   window.React = React; // enable debugger

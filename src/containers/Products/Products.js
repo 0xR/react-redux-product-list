@@ -33,7 +33,7 @@ export default class Products extends Component {
       content =
         (<div>
           <div className="row">
-            <Pagination {...{query, total, page}}/>
+            <Pagination {...{total, page}}/>
           </div>
           <ProductList products={products}/>
         </div>);

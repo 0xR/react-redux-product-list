@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import Link from 'react-router/lib/Link';
+import exposeRouter from './exposeRouter';
 
 const pagesAround = 5;
 const steps = 10;
@@ -19,35 +21,15 @@ class PaginationLinks extends Component {
     return pages;
   }
 
-  getNewQueryParams(page) {
-    const { query} = this.props;
-    const { state: { location: { query: queryParams}}} = router;
-    return {...queryParams, q: query, page};
-  }
-
-  // hrefForPage(page) {
-  //   const {router} = this.props;
-  //   const { state: { location: { pathname}}} = router;
-  //   return router.makeHref(pathname, this.getNewQueryParams(page));
-  // }
-  //
-  // handleClick(e, targetPage) {
-  //   e.preventDefault();
-  //   const {router, page} = this.props;
-  //   const {state: {location: {pathname}}} = router;
-  //   if (page !== targetPage) {
-  //     router.transitionTo(pathname, this.getNewQueryParams(targetPage));
-  //   }
-  // }
-
   render() {
     const totalPages = Math.ceil(this.props.total / productPerPage);
     const currentPage = this.props.page;
+    const { location: { query }} = this.props;
     return (
       <div style={{textAlign: 'center'}}>
         <ul className="pagination">{PaginationLinks.getPages(currentPage, totalPages).map((page) =>
             <li key={page} className={page === currentPage ? 'active' : null}>
-              {page}
+              <Link to="/products" query={{...query, page}}>{page}</Link>
             </li>
         )}</ul>
       </div>
@@ -55,10 +37,10 @@ class PaginationLinks extends Component {
   }
 }
 
-export default PaginationLinks;
+export default exposeRouter(PaginationLinks);
 
 PaginationLinks.propTypes = {
-  query: React.PropTypes.string.isRequired,
+  location: React.PropTypes.object.isRequired,
   total: React.PropTypes.number.isRequired,
   page: React.PropTypes.number.isRequired
 };

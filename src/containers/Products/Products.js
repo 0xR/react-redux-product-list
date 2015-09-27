@@ -5,10 +5,10 @@ import ProductList from '../../components/ProductList.js';
 import SearchBox from '../../components/SearchBox.js';
 import Pagination from '../../components/Pagination.js';
 import {isLoaded as productsLoaded, load as loadProducts} from '../../redux/modules/products.js';
+import exposeRouter from '../../components/exposeRouter';
 
 @connect(
-    state => (state.products))
-export default class Products extends Component {
+    state => (state.products)) class Products extends Component {
   static propTypes = {
     products: PropTypes.arrayOf(PropTypes.object),
     loaded: PropTypes.bool.isRequired,
@@ -16,13 +16,25 @@ export default class Products extends Component {
     error: PropTypes.string,
     query: PropTypes.string,
     page: PropTypes.number,
-    total: PropTypes.number
+    total: PropTypes.number,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   }
 
   static fetchData(store, params, query) {
     if (!productsLoaded(store.getState(), query.q, query.page)) {
       return store.dispatch(loadProducts(query.q, parseInt(query.page, 10)));
     }
+  }
+
+  searchForQuery(query) {
+    const {history, location: {query: queryParams, pathname}} = this.props;
+    const newQueryParams = {
+      ...queryParams,
+      q: query,
+      page: 1
+    };
+    history.pushState(null, pathname, newQueryParams);
   }
 
   render() {
@@ -33,7 +45,7 @@ export default class Products extends Component {
       content =
         (<div>
           <div className="row">
-            <Pagination {...{total, page}}/>
+            <Pagination {...{total, page, query}}/>
           </div>
           <ProductList products={products}/>
         </div>);
@@ -52,7 +64,7 @@ export default class Products extends Component {
         <h1>Products Search</h1>
 
         <div className="row">
-          <SearchBox query={query}/>
+          <SearchBox defaultValue={query} searchForQuery={(q) => this.searchForQuery(q)}/>
         </div>
 
         <div className="row">
@@ -62,3 +74,5 @@ export default class Products extends Component {
     );
   }
 }
+
+export default exposeRouter(Products);

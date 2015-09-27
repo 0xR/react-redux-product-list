@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Link from 'react-router/lib/Link';
-import exposeRouter from './exposeRouter';
 
 const pagesAround = 5;
 const steps = 10;
@@ -22,9 +21,8 @@ class PaginationLinks extends Component {
   }
 
   render() {
-    const totalPages = Math.ceil(this.props.total / productPerPage);
-    const currentPage = this.props.page;
-    const { location: { query }} = this.props;
+    const { page: currentPage, total, query} = this.props;
+    const totalPages = Math.ceil(total / productPerPage);
     return (
       <div style={{textAlign: 'center'}}>
         <ul className="pagination">{PaginationLinks.getPages(currentPage, totalPages).map((page) =>
@@ -37,10 +35,10 @@ class PaginationLinks extends Component {
   }
 }
 
-export default exposeRouter(PaginationLinks);
+export default PaginationLinks;
 
 PaginationLinks.propTypes = {
-  location: React.PropTypes.object.isRequired,
   total: React.PropTypes.number.isRequired,
-  page: React.PropTypes.number.isRequired
+  page: React.PropTypes.number.isRequired,
+  query: React.PropTypes.string.isRequired
 };

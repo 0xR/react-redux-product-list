@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 export default function exposeRouter(Wrapped) {
 
   class ExposeRouter extends Component {
+    static WrappedComponent = Wrapped
     render() {
       return <Wrapped {...this.props} history={this.context.history} location={this.context.location}/>;
     }
